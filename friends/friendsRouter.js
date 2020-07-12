@@ -20,7 +20,6 @@ router.post('/', (req, res)=>{
     let id = req.decodedToken.subject
     Friends.findByUsername(req.body.user)
         .then(user=>{
-            console.log('user', user)
             let body = {};
             body.user1 = id
             body.user2 = user[0].id

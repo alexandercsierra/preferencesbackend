@@ -30,7 +30,6 @@ router.post('/login', validateUser, (req, res)=>{
 
     User.findByUsername({username}).first()
         .then(user=>{
-            console.log('found', user)
             if(user && bcrypt.compareSync(password, user.password)){
                 const token = generateToken(user);
                 res.status(200).json({user, token})
@@ -51,7 +50,6 @@ router.put('/img_url', restricted, (req, res) => {
     const id = req.decodedToken.subject
     const img_url = req.body;
     
-    console.log('image', img_url)
     User.editImage(id, img_url)
         .then(img=>res.status(200).json(img))
         .catch(err=>{
