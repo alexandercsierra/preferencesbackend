@@ -3,7 +3,8 @@ module.exports = {
     getAll,
     findBy,
     findByUsername,
-    editImage
+    editImage,
+    findImage
 }
 
 const db = require('../data/db-config')
@@ -18,6 +19,10 @@ function getAll(){
 
 function findBy(id){
     return db('users').where({id}).select('id', 'name', 'email', 'username', 'img_url')
+}
+
+function findImage(id){
+    return db('users').where({id}).select('img_url')
 }
 
 function findByUsername(username){
