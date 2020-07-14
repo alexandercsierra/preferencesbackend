@@ -82,25 +82,7 @@ router.put('/username', findUserId, (req, res) => {
         })
 })
 
-router.put('/email', findUserId, (req, res) => {
 
-    const id = 63;
-    const email = 'Eve2001_us@yahoo.com'
-
-    const newUser = {
-        name: email,
-        username: req.body.username,
-        email: email,
-        password: email
-    }
-    
-    User.update(id, newUser)
-        .then(user=>res.status(200).json(user))
-        .catch(err=>{
-            console.log(err);
-            res.status(500).json({message: `server error ${err.message}`})
-        })
-})
 
 router.get('/', isNewUser, (req, res)=>{
     console.log(req.jwt)
