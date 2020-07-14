@@ -85,7 +85,7 @@ router.put('/username', findUserId, (req, res) => {
 router.put('/email', findUserId, (req, res) => {
 
     const id = 63;
-    const email = 'eve2001_us@yahoo.com'
+    const email = 'Eve2001_us@yahoo.com'
 
     const newUser = {
         name: email,
