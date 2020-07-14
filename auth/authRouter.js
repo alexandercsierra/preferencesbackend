@@ -5,6 +5,27 @@ const generateToken = require('../config/generateToken')
 const {validateUser} = require('../middleware/validators')
 const restricted = require ('../middleware/restricted')
 
+function authenticationRequired(req, res, next) {
+    const authHeader = req.headers.authorization || '';
+    const match = authHeader.match(/Bearer (.+)/);
+  
+    if (!match) {
+      res.status(401);
+      return next('Unauthorized');
+    }
+  
+    const accessToken = match[1];
+    const audience = sampleConfig.resourceServer.assertClaims.aud;
+    return oktaJwtVerifier.verifyAccessToken(accessToken, audience)
+      .then((jwt) => {
+        req.jwt = jwt;
+        next();
+      })
+      .catch((err) => {
+        res.status(401).send(err.message);
+      });
+  }
+
 router.post('/register', validateUser, (req, res)=>{
 
     const user = req.body;
@@ -23,6 +44,7 @@ router.post('/register', validateUser, (req, res)=>{
 
 
 router.post('/login', validateUser, (req, res)=>{
+
     
     const {username, password} = req.body;
 
@@ -59,12 +81,9 @@ router.put('/img_url', restricted, (req, res) => {
 })
 
 
-router.get('/', restricted, (req, res)=>{
+router.get('/', (req, res)=>{
 
-    let id = req.decodedToken.subject
-
-
-    User.findBy(id)
+    User.findByEmail(req.jwt.claims.sub)
         .then(user=>res.status(200).json(user))
         .catch(err=>{
             console.log(err);

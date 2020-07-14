@@ -3,6 +3,7 @@ module.exports = {
     getAll,
     findBy,
     findByUsername,
+    findByEmail,
     editImage,
     findImage
 }
@@ -28,6 +29,11 @@ function findImage(id){
 function findByUsername(username){
     console.log('in the model', username)
     return db('users').where(username).returning('*')
+}
+
+
+function findByEmail(email){
+    return db('users').where({email}).returning('*')
 }
 
 function editImage(id, img_url){

@@ -2,6 +2,7 @@ module.exports = {
     add,
     getAll,
     findByUserId,
+    findByEmail,
     update,
     remove
 }
@@ -9,6 +10,7 @@ module.exports = {
 const db = require('../data/db-config')
 
 function add(list){
+    console.log('from the model', list)
     return db('lists').insert(list).returning('*')
 }
 
@@ -23,6 +25,10 @@ function findByUserId(user_id){
     //     this.on('items.list_id', '=', 'lists.id')
     //   })
     // .select('lists.id as list_id', 'user_id', 'items.id as item_id','items.name as item_name', 'lists.name as list_name', 'category', 'quantity')
+}
+
+function findByEmail(email){
+    return db('users').where({email}).select('id')
 }
 
 function update(id, list){

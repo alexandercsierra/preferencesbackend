@@ -1,27 +1,50 @@
 const express = require('express');
 const router = express.Router();
 const Lists = require('./listsModel')
-
+const Users = require('../auth/authModel')
 
 router.post('/', (req, res)=>{
 
-    let id = req.decodedToken.subject
     let body = req.body
-    body.user_id = id
-    Lists.add(body)
-        .then(list=>res.status(201).json(list))
+
+    console.log('body', req.body)
+
+    Users.findByEmail(req.jwt.claims.sub)
+        .then(user=>{
+            console.log('user id', user[0].id)
+            body.user_id = user[0].id
+            console.log('body', body)
+            Lists.add(body)
+                .then(list=>res.status(201).json(list))
+                .catch(err=>{
+                    console.log(err)
+                    res.status(500).json({message: err.message})
+                })
+
+        })
         .catch(err=>{
             console.log(err)
             res.status(500).json({message: err.message})
         })
+    
+
+    
 })
 
 
 //gets all lists belonging to a user
 router.get('/', (req, res)=>{
 
-    Lists.findByUserId(req.decodedToken.subject)
-        .then(list=>res.status(200).json(list))
+    // Users.getByEmail
+    Lists.findByEmail(req.jwt.claims.sub)
+        .then(list=>{
+            Lists.findByUserId(list[0].id)
+                .then(thelist=>res.status(200).json(thelist))
+                .catch(err=>{
+                    console.log(err)
+                    res.status(500).json({message: err.message})
+                })
+        })
         .catch(err=>{
             console.log(err)
             res.status(500).json({message: err.message})
