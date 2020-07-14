@@ -17,7 +17,7 @@ function add(user){
 }
 
 function getAll(){
-    return db('users')
+    return db('users').returning('*')
 }
 
 function findBy(id){

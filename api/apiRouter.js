@@ -42,7 +42,6 @@ const oktaJwtVerifier = new OktaJwtVerifier({
   }
 
 router.use('/auth', authenticationRequired,  authRouter);
-router.use('/users', authRouter);
 router.use('/lists', authenticationRequired, listsRouter);
 router.use('/items', authenticationRequired, itemsRouter);
 router.use('/friends', authenticationRequired, friendsRouter);
