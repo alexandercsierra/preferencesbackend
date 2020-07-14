@@ -102,6 +102,15 @@ router.get('/:id', isNewUser, (req, res)=>{
         })
 })
 
+router.get('/userid/:id', (req, res)=>{
+    User.findBy(id)
+        .then(users=>res.status(200).json(users))
+        .catch(err=>{
+            console.log(err);
+            res.status(500).json({message: `server error ${err.message}`})
+        })
+})
+
 router.get('/img/:id', (req, res)=>{
 
     let id = req.params.id

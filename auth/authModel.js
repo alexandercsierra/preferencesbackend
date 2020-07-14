@@ -17,7 +17,7 @@ function add(user){
 }
 
 function getAll(){
-    return db('users').select('id', 'name', 'email', 'username', 'img_url')
+    return db('users')
 }
 
 function findBy(id){
