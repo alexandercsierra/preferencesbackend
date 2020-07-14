@@ -103,7 +103,7 @@ router.get('/:id', isNewUser, (req, res)=>{
 })
 
 router.get('/userid/:id', (req, res)=>{
-    User.findBy(id)
+    User.findBy(req.params.id)
         .then(users=>res.status(200).json(users))
         .catch(err=>{
             console.log(err);
