@@ -3,6 +3,7 @@ module.exports = {
     getAll,
     findByUserId,
     findByUsername,
+    findByEmail,
     update,
     remove
 }
@@ -26,6 +27,10 @@ function findByUserId(user1){
 function findByUsername(username){
     console.log('in the model', username)
     return db('users').where({username}).returning('*')
+}
+
+function findByEmail(email){
+    return db('users').where({email}).returning('*')
 }
 
 function update(id, friend){

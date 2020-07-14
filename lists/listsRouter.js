@@ -2,30 +2,23 @@ const express = require('express');
 const router = express.Router();
 const Lists = require('./listsModel')
 const Users = require('../auth/authModel')
+const findUserId = require('../middleware/findUserId')
 
-router.post('/', (req, res)=>{
+router.post('/', findUserId, (req, res)=>{
 
-    let body = req.body
+    let body = {
+        name: req.body.name,
+        user_id: req.body.the_user_id
+    }
 
-    console.log('body', req.body)
-
-    Users.findByEmail(req.jwt.claims.sub)
-        .then(user=>{
-            console.log('user id', user[0].id)
-            body.user_id = user[0].id
-            console.log('body', body)
-            Lists.add(body)
-                .then(list=>res.status(201).json(list))
-                .catch(err=>{
-                    console.log(err)
-                    res.status(500).json({message: err.message})
-                })
-
-        })
+    Lists.add(body)
+        .then(list=>res.status(201).json(list))
         .catch(err=>{
             console.log(err)
             res.status(500).json({message: err.message})
         })
+
+
     
 
     
@@ -33,22 +26,15 @@ router.post('/', (req, res)=>{
 
 
 //gets all lists belonging to a user
-router.get('/', (req, res)=>{
+router.get('/', findUserId, (req, res)=>{
 
-    // Users.getByEmail
-    Lists.findByEmail(req.jwt.claims.sub)
-        .then(list=>{
-            Lists.findByUserId(list[0].id)
-                .then(thelist=>res.status(200).json(thelist))
-                .catch(err=>{
-                    console.log(err)
-                    res.status(500).json({message: err.message})
-                })
-        })
+    Lists.findByUserId(req.body.the_user_id)
+        .then(thelist=>res.status(200).json(thelist))
         .catch(err=>{
             console.log(err)
             res.status(500).json({message: err.message})
         })
+
 })
 
 //get list of a particular user

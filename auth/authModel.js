@@ -5,7 +5,9 @@ module.exports = {
     findByUsername,
     findByEmail,
     editImage,
-    findImage
+    findImage,
+    update,
+    remove
 }
 
 const db = require('../data/db-config')
@@ -27,7 +29,6 @@ function findImage(id){
 }
 
 function findByUsername(username){
-    console.log('in the model', username)
     return db('users').where(username).returning('*')
 }
 
@@ -38,4 +39,12 @@ function findByEmail(email){
 
 function editImage(id, img_url){
     return db('users').where({id}).update(img_url).returning('img_url')
+}
+
+function remove(email){
+    return db('users').where({email}).del().returning('*')
+}
+
+function update(id, user){
+    return db('users').where({id}).update(user).returning('*')
 }

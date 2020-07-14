@@ -1,30 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const Friends = require('./friendsModel')
+const findUserId = require('../middleware/findUserId')
 
-// router.post('/', (req, res)=>{
 
-//     let id = req.decodedToken.subject
-//     let body = {};
-//     body.user1 = id
-//     body.user2 = req.body.user2
-//     Friends.add(body)
-//         .then(friends=>res.status(201).json(friends))
-//         .catch(err=>{
-//             console.log(err)
-//             res.status(500).json({message: err.message})
-//         })
-// })
 
-router.post('/', (req, res)=>{
-    let id = req.decodedToken.subject
+router.post('/', findUserId, (req, res)=>{
+    let id = req.body.the_user_id
     Friends.findByUsername(req.body.user)
         .then(user=>{
             let body = {};
             body.user1 = id
             body.user2 = user[0].id
             Friends.add(body)
-                .then(friends=>res.status(201).json({friend: user[0].username}))
+                .then(friends=>res.status(201).json({friend: user[0].username, id: user[0].id}))
                 .catch(err=>{
                     console.log(err)
                     res.status(500).json({message: err.message})
@@ -37,9 +26,8 @@ router.post('/', (req, res)=>{
 })
 
 
-router.get('/', (req, res)=>{
-
-    Friends.findByUserId(req.decodedToken.subject)
+router.get('/', findUserId, (req, res)=>{
+    Friends.findByUserId(req.body.the_user_id)
         .then(list=>res.status(200).json(list))
         .catch(err=>{
             console.log(err)
@@ -60,10 +48,10 @@ router.put('/:id', (req, res)=>{
 })
 
 //id of the list
-router.delete('/:user2', (req, res)=>{
-    let id = req.decodedToken.subject
+router.delete('/:user2', findUserId, (req, res)=>{
+    // let id = req.decodedToken.subject
     const {user2} = req.params;
-    Friends.remove(id, user2)
+    Friends.remove(req.body.the_user_id, user2)
         .then(list=>res.status(200).json(list))
         .catch(err=>{
             console.log(err)
