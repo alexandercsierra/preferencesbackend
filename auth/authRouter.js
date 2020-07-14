@@ -102,8 +102,8 @@ router.get('/:id', isNewUser, (req, res)=>{
         })
 })
 
-router.get('/userid/:id', (req, res)=>{
-    User.findBy(req.params.id)
+router.get('/userid', (req, res)=>{
+    User.getAll()
         .then(users=>res.status(200).json(users))
         .catch(err=>{
             console.log(err);
